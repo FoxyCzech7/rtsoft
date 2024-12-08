@@ -1,6 +1,6 @@
 **Systém pro rezervaci místností**
 
-Tato aplikace umožňuje snadné rezervování místností v budově. Uživatelé mohou přidávat nové rezervace, prohlížet existující rezervace a zrušit ty, které již nejsou potřeba.
+Tato aplikace umožňuje rezervování místností v budově. Uživatelé mohou přidávat nové rezervace, prohlížet existující rezervace a zrušit ty, které již nejsou potřeba.
 
 **Funkce aplikace**
 
@@ -14,9 +14,9 @@ Tato aplikace umožňuje snadné rezervování místností v budově. Uživatel�
 
 **Zobrazení všech rezervací:**
    - Všichni uživatelé mohou prohlížet seznam všech rezervací.
-   - Rezervace jsou seřazeny podle data a času.
+   - Rezervace jsou seřazeny podle data.
 **Zrušení rezervace:**
-   - Pokud chcete zrušit svou rezervaci, zadejte ID rezervace a klikněte na tlačítko Zrušit rezervaci.
+   - Pokud chcete zrušit svou rezervaci, zadejte ID rezervace a klikněte na tlačítko "Zrušit rezervaci".
 
 Validace a pravidla
 - **Datum rezervace musí být v budoucnosti.**
