@@ -11,6 +11,7 @@ usort($rezervace, function ($a, $b) {
 });
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    // Přidání nové rezervace
     if (isset($_POST['pridat'])) {
         $mistnost = $_POST['mistnost'];
         $datum = $_POST['datum'];
@@ -21,7 +22,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         if (!$mistnost || !$datum || !$zacatek || !$konec || !$jmeno) {
             $zprava = "Všechna pole musí být vyplněna.";
         } else {
-            if ($zacatek >= $konec) {
+            // Porovnání času začátku a konce
+            $zacatek_time = DateTime::createFromFormat('H:i:s', $zacatek);
+            $konec_time = DateTime::createFromFormat('H:i:s', $konec);
+
+            if ($zacatek_time >= $konec_time) {
                 $zprava = "Čas začátku musí být před časem konce.";
             } else {
                 $soucasne_datum = new DateTime();
@@ -31,11 +36,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     $zprava = "Datum rezervace musí být v budoucnosti.";
                 } else {
                     $je_konflikt = false;
-                    foreach ($rezervace as $rezervace) {
-                        if ($rezervace['datum'] === $datum) {
+                    foreach ($rezervace as $rezervace_item) {
+                        if ($rezervace_item['datum'] === $datum) {
                             if (
-                                ($zacatek >= $rezervace['zacatek'] && $zacatek < $rezervace['konec']) ||
-                                ($konec > $rezervace['zacatek'] && $konec <= $rezervace['konec'])
+                                ($zacatek_time >= DateTime::createFromFormat('H:i:s', $rezervace_item['zacatek']) && $zacatek_time < DateTime::createFromFormat('H:i:s', $rezervace_item['konec'])) ||
+                                ($konec_time > DateTime::createFromFormat('H:i:s', $rezervace_item['zacatek']) && $konec_time <= DateTime::createFromFormat('H:i:s', $rezervace_item['konec']))
                             ) {
                                 $je_konflikt = true;
                                 break;
@@ -63,15 +68,22 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
     }
 
+    // Zrušení rezervace
     if (isset($_POST['smazat'])) {
         $rezervace_id = $_POST['rezervace_id'];
-        foreach ($rezervace as $klic => $rezervace) {
-            if ($rezervace['id'] == $rezervace_id) {
-                unset($rezervace[$klic]);
-                file_put_contents('rezervace.json', json_encode(array_values($rezervace)));
+        
+        // Procházejte rezervace a najděte rezervaci, která má požadované ID
+        foreach ($rezervace as $klic => $rezervace_item) {
+            if ($rezervace_item['id'] == $rezervace_id) {
+                unset($rezervace[$klic]);  // Odstraňte rezervaci z pole
+                file_put_contents('rezervace.json', json_encode(array_values($rezervace))); // Zápis zpět do souboru
                 $zprava = "Rezervace byla úspěšně zrušena.";
-                break;
+                break;  // Po odstranění rezervace přestaň procházet pole
             }
+        }
+        
+        if (!isset($zprava)) {
+            $zprava = "Rezervace s tímto ID nebyla nalezena.";
         }
     }
 }
@@ -94,23 +106,23 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <form method="post">
         <div class="form-group">
             <label for="mistnost">Název místnosti:</label>
-            <input type="text" id="mistnost" name="mistnost" required>
+            <input type="text" id="mistnost" name="mistnost">
         </div>
         <div class="form-group">
             <label for="datum">Datum:</label>
-            <input type="date" id="datum" name="datum" required>
+            <input type="date" id="datum" name="datum">
         </div>
         <div class="form-group">
             <label for="zacatek">Začátek:</label>
-            <input type="text" id="zacatek" name="zacatek" pattern="([01]?[0-9]|2[0-3]):([0-5]?[0-9]):([0-5]?[0-9])" placeholder="hh:mm:ss" required>
+            <input type="text" id="zacatek" name="zacatek" pattern="([01]?[0-9]|2[0-3]):([0-5]?[0-9]):([0-5]?[0-9])" placeholder="hh:mm:ss">
         </div>
         <div class="form-group">
             <label for="konec">Konec:</label>
-            <input type="text" id="konec" name="konec" pattern="([01]?[0-9]|2[0-3]):([0-5]?[0-9]):([0-5]?[0-9])" placeholder="hh:mm:ss" required>
+            <input type="text" id="konec" name="konec" pattern="([01]?[0-9]|2[0-3]):([0-5]?[0-9]):([0-5]?[0-9])" placeholder="hh:mm:ss">
         </div>
         <div class="form-group">
             <label for="jmeno">Vaše jméno:</label>
-            <input type="text" id="jmeno" name="jmeno" required>
+            <input type="text" id="jmeno" name="jmeno">
         </div>
         <button type="submit" name="pridat">Přidat rezervaci</button>
     </form>
@@ -125,14 +137,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             <th>Konec</th>
             <th>Jméno</th>
         </tr>
-        <?php foreach ($rezervace as $rezervace): ?>
+        <?php foreach ($rezervace as $rezervace_item): ?>
             <tr>
-                <td><?= htmlspecialchars($rezervace['id']) ?></td>
-                <td><?= htmlspecialchars($rezervace['mistnost']) ?></td>
-                <td><?= htmlspecialchars((new DateTime($rezervace['datum']))->format('d/m/Y')) ?></td>
-                <td><?= htmlspecialchars($rezervace['zacatek']) ?></td>
-                <td><?= htmlspecialchars($rezervace['konec']) ?></td>
-                <td><?= htmlspecialchars($rezervace['jmeno']) ?></td>
+                <td><?= htmlspecialchars($rezervace_item['id']) ?></td>
+                <td><?= htmlspecialchars($rezervace_item['mistnost']) ?></td>
+                <td><?= htmlspecialchars((new DateTime($rezervace_item['datum']))->format('d/m/Y')) ?></td>
+                <td><?= htmlspecialchars($rezervace_item['zacatek']) ?></td>
+                <td><?= htmlspecialchars($rezervace_item['konec']) ?></td>
+                <td><?= htmlspecialchars($rezervace_item['jmeno']) ?></td>
             </tr>
         <?php endforeach; ?>
     </table>
