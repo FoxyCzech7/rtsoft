@@ -98,12 +98,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Rezervace místností</title>
     <link rel="stylesheet" href="style1.css">
-    <style>
-        .zprava {
-            font-weight: bold;
-            color: red;
-        }
-    </style>
 </head>
 <body>
     <h1>Rezervace místností</h1>
