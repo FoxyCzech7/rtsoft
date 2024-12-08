@@ -2,18 +2,15 @@
 $zprava = "";
 $rezervace = [];
 
-// Načtení rezervací z JSON souboru
 if (file_exists('rezervace.json')) {
     $rezervace = json_decode(file_get_contents('rezervace.json'), true);
 }
 
-// Seřazení rezervací podle data
 usort($rezervace, function ($a, $b) {
     return strtotime($a['datum']) - strtotime($b['datum']);
 });
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    // Přidání nové rezervace
     if (isset($_POST['pridat'])) {
         $mistnost = $_POST['mistnost'];
         $datum = $_POST['datum'];
@@ -24,7 +21,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         if (!$mistnost || !$datum || !$zacatek || !$konec || !$jmeno) {
             $zprava = "Všechna pole musí být vyplněna.";
         } else {
-            // Porovnání času začátku a konce
             $zacatek_time = DateTime::createFromFormat('H:i:s', $zacatek);
             $konec_time = DateTime::createFromFormat('H:i:s', $konec);
 
@@ -70,17 +66,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
     }
 
-    // Zrušení rezervace
     if (isset($_POST['smazat'])) {
         $rezervace_id = $_POST['rezervace_id'];
         
-        // Procházejte rezervace a najděte rezervaci, která má požadované ID
         foreach ($rezervace as $klic => $rezervace_item) {
             if ($rezervace_item['id'] == $rezervace_id) {
-                unset($rezervace[$klic]);  // Odstraňte rezervaci z pole
-                file_put_contents('rezervace.json', json_encode(array_values($rezervace), JSON_PRETTY_PRINT)); // Zápis zpět do souboru
+                unset($rezervace[$klic]);
+                file_put_contents('rezervace.json', json_encode(array_values($rezervace), JSON_PRETTY_PRINT)); 
                 $zprava = "Rezervace byla úspěšně zrušena.";
-                break;  // Po odstranění rezervace přestaň procházet pole
+                break;  
             }
         }
         
@@ -102,7 +96,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <body>
     <h1>Rezervace místností</h1>
 
-    <!-- Zobrazení zprávy o stavu rezervace -->
     <?php if ($zprava): ?>
         <p class="zprava"><?= htmlspecialchars($zprava) ?></p>
     <?php endif; ?>
