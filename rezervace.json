@@ -1,18 +1,18 @@
 [
     {
         "id": 1,
-        "mistnost": "Zasedací místnost 1",
-        "datum": "2024/10/12",
-        "zacatek": "09:00:00",
-        "konec": "11:00:00",
+        "mistnost": "Místnost A",
+        "datum": "12/10/2024",
+        "zacatek": "08:00:00",
+        "konec": "10:00:00",
         "jmeno": "Jan Novák"
     },
     {
         "id": 2,
-        "mistnost": "Místnost 2",
-        "datum": "2024/10/12",
-        "zacatek": "14:00:00",
-        "konec": "16:00:00",
-        "jmeno": "Marie Nováková"
+        "mistnost": "Místnost B",
+        "datum": "12/11/2024",
+        "zacatek": "10:30:00",
+        "konec": "12:00:00",
+        "jmeno": "Eva Nováková"
     }
 ]
