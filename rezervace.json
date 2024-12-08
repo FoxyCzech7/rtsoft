@@ -1,0 +1,18 @@
+[
+    {
+        "id": 1,
+        "mistnost": "Zasedací místnost 1",
+        "datum": "2024/12/10",
+        "zacatek": "09:00:00",
+        "konec": "11:00:00",
+        "jmeno": "Jan Novák"
+    },
+    {
+        "id": 2,
+        "mistnost": "Místnost 2",
+        "datum": "2024/12/11",
+        "zacatek": "14:00:00",
+        "konec": "16:00:00",
+        "jmeno": "Marie Nováková"
+    }
+]
