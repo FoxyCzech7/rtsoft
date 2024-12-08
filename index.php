@@ -2,10 +2,12 @@
 $zprava = "";
 $rezervace = [];
 
+// Načtení rezervací z JSON souboru
 if (file_exists('rezervace.json')) {
     $rezervace = json_decode(file_get_contents('rezervace.json'), true);
 }
 
+// Seřazení rezervací podle data
 usort($rezervace, function ($a, $b) {
     return strtotime($a['datum']) - strtotime($b['datum']);
 });
@@ -60,7 +62,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                             'jmeno' => $jmeno
                         ];
                         $rezervace[] = $nova_rezervace;
-                        file_put_contents('rezervace.json', json_encode($rezervace));
+                        file_put_contents('rezervace.json', json_encode($rezervace, JSON_PRETTY_PRINT));
                         $zprava = "Rezervace byla úspěšně přidána.";
                     }
                 }
@@ -76,7 +78,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         foreach ($rezervace as $klic => $rezervace_item) {
             if ($rezervace_item['id'] == $rezervace_id) {
                 unset($rezervace[$klic]);  // Odstraňte rezervaci z pole
-                file_put_contents('rezervace.json', json_encode(array_values($rezervace))); // Zápis zpět do souboru
+                file_put_contents('rezervace.json', json_encode(array_values($rezervace), JSON_PRETTY_PRINT)); // Zápis zpět do souboru
                 $zprava = "Rezervace byla úspěšně zrušena.";
                 break;  // Po odstranění rezervace přestaň procházet pole
             }
@@ -96,9 +98,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Rezervace místností</title>
     <link rel="stylesheet" href="style1.css">
+    <style>
+        .zprava {
+            font-weight: bold;
+            color: red;
+        }
+    </style>
 </head>
 <body>
     <h1>Rezervace místností</h1>
+
+    <!-- Zobrazení zprávy o stavu rezervace -->
     <?php if ($zprava): ?>
         <p class="zprava"><?= htmlspecialchars($zprava) ?></p>
     <?php endif; ?>
