@@ -1,18 +1,23 @@
+
+Zde jsou dva příklady rezervací v souboru rezervace.json:
+
+json
+Copy code
 [
     {
         "id": 1,
         "mistnost": "Místnost A",
-        "datum": "12/10/2024",
-        "zacatek": "08:00:00",
-        "konec": "10:00:00",
+        "datum": "2024-12-10",
+        "zacatek": "09:00:00",
+        "konec": "11:00:00",
         "jmeno": "Jan Novák"
     },
     {
         "id": 2,
         "mistnost": "Místnost B",
-        "datum": "12/11/2024",
-        "zacatek": "10:30:00",
-        "konec": "12:00:00",
-        "jmeno": "Eva Nováková"
+        "datum": "2024-12-10",
+        "zacatek": "12:00:00",
+        "konec": "14:00:00",
+        "jmeno": "Eva Novotná"
     }
 ]
