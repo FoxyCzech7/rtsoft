@@ -2,7 +2,7 @@
 
 Tato aplikace umožňuje snadné rezervování místností v budově. Uživatelé mohou přidávat nové rezervace, prohlížet existující rezervace a zrušit ty, které již nejsou potřeba.
 
-__**Funkce aplikace**__
+**Funkce aplikace**
 **Přidání nové rezervace:**
    - Vyplňte formulář se základními údaji:
      - **Název místnosti** (např. "Konferenční místnost 1")
