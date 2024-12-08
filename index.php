@@ -35,11 +35,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 } else {
                     $je_konflikt = false;
                     foreach ($rezervace as $rezervace_item) {
-                        if ($rezervace_item['datum'] === $datum) {
-                            if (
-                                ($zacatek_time >= DateTime::createFromFormat('H:i:s', $rezervace_item['zacatek']) && $zacatek_time < DateTime::createFromFormat('H:i:s', $rezervace_item['konec'])) ||
-                                ($konec_time > DateTime::createFromFormat('H:i:s', $rezervace_item['zacatek']) && $konec_time <= DateTime::createFromFormat('H:i:s', $rezervace_item['konec']))
-                            ) {
+                        if ($rezervace_item['mistnost'] === $mistnost && $rezervace_item['datum'] === $datum) {
+                            $rezervace_zacatek = DateTime::createFromFormat('H:i:s', $rezervace_item['zacatek']);
+                            $rezervace_konec = DateTime::createFromFormat('H:i:s', $rezervace_item['konec']);
+
+                            if (($zacatek_time >= $rezervace_zacatek && $zacatek_time < $rezervace_konec) ||
+                                ($konec_time > $rezervace_zacatek && $konec_time <= $rezervace_konec) ||
+                                ($zacatek_time <= $rezervace_zacatek && $konec_time >= $rezervace_konec)) {
                                 $je_konflikt = true;
                                 break;
                             }
@@ -68,16 +70,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     if (isset($_POST['smazat'])) {
         $rezervace_id = $_POST['rezervace_id'];
-        
+
         foreach ($rezervace as $klic => $rezervace_item) {
             if ($rezervace_item['id'] == $rezervace_id) {
                 unset($rezervace[$klic]);
-                file_put_contents('rezervace.json', json_encode(array_values($rezervace), JSON_PRETTY_PRINT)); 
+                file_put_contents('rezervace.json', json_encode(array_values($rezervace), JSON_PRETTY_PRINT));
                 $zprava = "Rezervace byla úspěšně zrušena.";
-                break;  
+                break;
             }
         }
-        
+
         if (!isset($zprava)) {
             $zprava = "Rezervace s tímto ID nebyla nalezena.";
         }
